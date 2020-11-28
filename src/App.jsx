@@ -6,9 +6,9 @@ import StateCard from "./Card";
 const RANGE_MAX = 40000000000;
 const SMALL_MEDIUM = 2500000;
 const MEDIUM_LARGE = 6500000;
-const alphabet = "Alphabetical";
-const evLow = "Electoral Votes, Low to High";
-const evHigh = "Electoral Votes, High to Low";
+const ALPHABET = "Alphabetical";
+const EVLOW = "Electoral Votes, Low to High";
+const EVHIGH = "Electoral Votes, High to Low";
 
 function withinRange(num, tuple) {
   const result = num >= tuple[0] && num < tuple[1];
@@ -19,7 +19,7 @@ function App() {
   const [cards, setCards] = useState(data);
   const [winnerFilter, setWinnerFilter] = useState("");
   const [populationFilter, setPopulationFilter] = useState([0, RANGE_MAX]);
-  const [sortedBy, setSortedBy] = useState(alphabet);
+  const [sortedBy, setSortedBy] = useState(ALPHABET);
   const [selected, setSelected] = useState([]);
 
   function updateWinnerFilter(winner) {
@@ -44,16 +44,16 @@ function App() {
   }
 
   function sortState(list, type) {
-    if (type === alphabet) {
+    if (type === ALPHABET) {
       const alphabet = list.sort((a, b) => {
         if (a.state < b.state) return -1;
         else if (a.state < b.state) return 1;
         else return 0;
       });
       return alphabet;
-    } else if (type === evLow) {
+    } else if (type === EVLOW) {
       return list.sort((a, b) => a.electoral - b.electoral);
-    } else if (type === evHigh) {
+    } else if (type === EVHIGH) {
       return list.sort((a, b) => b.electoral - a.electoral);
     }
   }
@@ -141,21 +141,21 @@ function App() {
             Sort:
           </Typography>
           <Button
-            color={sortedBy === alphabet ? "primary" : "default"}
-            onClick={() => sortButton(alphabet)}
+            color={sortedBy === ALPHABET ? "primary" : "default"}
+            onClick={() => sortButton(ALPHABET)}
           >
             Alphabetically
           </Button>
           <Button
-            color={sortedBy === evLow ? "primary" : "default"}
-            onClick={() => sortButton(evLow)}
+            color={sortedBy === EVLOW ? "primary" : "default"}
+            onClick={() => sortButton(EVLOW)}
           >
             Electoral Votes, low to high
           </Button>
 
           <Button
-            color={sortedBy === evHigh ? "primary" : "default"}
-            onClick={() => sortButton(evHigh)}
+            color={sortedBy === EVHIGH ? "primary" : "default"}
+            onClick={() => sortButton(EVHIGH)}
           >
             Electoral Votes, high to low
           </Button>
