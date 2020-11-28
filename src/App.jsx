@@ -1,6 +1,7 @@
 import data from "./data";
 import { useState } from "react";
-import { Grid, Card, Typography, CardContent, Button } from "@material-ui/core";
+import { Grid, Typography, Button } from "@material-ui/core";
+import StateCard from "./Card";
 
 const RANGE_MAX = 40000000000;
 const SMALL_MEDIUM = 2500000;
@@ -11,7 +12,6 @@ const evHigh = "Electoral Votes, High to Low";
 
 function withinRange(num, tuple) {
   const result = num >= tuple[0] && num < tuple[1];
-  console.log(num, tuple[0], tuple[1], result);
   return result;
 }
 
@@ -20,6 +20,7 @@ function App() {
   const [winnerFilter, setWinnerFilter] = useState("");
   const [populationFilter, setPopulationFilter] = useState([0, RANGE_MAX]);
   const [sortedBy, setSortedBy] = useState(alphabet);
+  const [selected, setSelected] = useState([]);
 
   function updateWinnerFilter(winner) {
     setCards(
@@ -29,7 +30,6 @@ function App() {
           withinRange(s.population, populationFilter)
       )
     );
-
     setWinnerFilter(winner);
   }
 
@@ -65,120 +65,127 @@ function App() {
 
   return (
     <div style={{ padding: 20 }}>
-      <div>
-        <Typography variant={"subtitle1"} display={"inline"}>
-          Filter by winner:
+      <div style={{ padding: 4 }}>
+        <Typography variant="body1">
+          Click on states to add up the total electoral votes!
         </Typography>
-        <Button
-          color={winnerFilter === "" ? "primary" : ""}
-          onClick={() => updateWinnerFilter("")}
-        >
-          Both candidates
-        </Button>
-        <Button
-          color={winnerFilter === "Biden" ? "primary" : ""}
-          onClick={() => updateWinnerFilter("Biden")}
-        >
-          States Biden won
-        </Button>
-        <Button
-          color={winnerFilter === "Trump" ? "primary" : ""}
-          onClick={() => updateWinnerFilter("Trump")}
-        >
-          States Trump won
-        </Button>
-      </div>
-
-      <div>
-        <Typography variant={"subtitle1"} display={"inline"}>
-          Filter by population:
+        <Typography variant="h4"> Selected States</Typography>
+        <Typography variant="body1">
+          {selected.map((item) => item.state).join(",  ")}
         </Typography>
-        <Button
-          color={
-            populationFilter[0] === 0 && populationFilter[1] === RANGE_MAX
-              ? "primary"
-              : ""
-          }
-          onClick={() => updatePopulationFilter([0, RANGE_MAX])}
-        >
-          All sizes
-        </Button>
-        <Button
-          color={populationFilter[1] === SMALL_MEDIUM ? "primary" : ""}
-          onClick={() => updatePopulationFilter([0, SMALL_MEDIUM])}
-        >
-          Small states
-        </Button>
-        <Button
-          color={populationFilter[0] === SMALL_MEDIUM ? "primary" : ""}
-          onClick={() => updatePopulationFilter([SMALL_MEDIUM, MEDIUM_LARGE])}
-        >
-          Medium states
-        </Button>
-        <Button
-          color={populationFilter[0] === MEDIUM_LARGE ? "primary" : ""}
-          onClick={() => updatePopulationFilter([MEDIUM_LARGE, RANGE_MAX])}
-        >
-          Big states
-        </Button>
-      </div>
-
-      <div>
-        <Typography variant={"subtitle1"} display={"inline"}>
-          Sort:
+        <Typography variant="h4">
+          {" "}
+          Electoral Votes:{" "}
+          {selected.reduce((acc, cur) => acc + cur.electoral, 0)}
         </Typography>
-        <Button
-          color={sortedBy === alphabet ? "primary" : ""}
-          onClick={() => sortButton(alphabet)}
-        >
-          Alphabetically
-        </Button>
-        <Button
-          color={sortedBy === evLow ? "primary" : ""}
-          onClick={() => sortButton(evLow)}
-        >
-          Electoral Votes, low to high
-        </Button>
+        <div>
+          <Typography variant={"subtitle1"} display={"inline"}>
+            Filter by winner:
+          </Typography>
+          <Button
+            color={winnerFilter === "" ? "primary" : "default"}
+            onClick={() => updateWinnerFilter("")}
+          >
+            Both candidates
+          </Button>
+          <Button
+            color={winnerFilter === "Biden" ? "primary" : "default"}
+            onClick={() => updateWinnerFilter("Biden")}
+          >
+            States Biden won
+          </Button>
+          <Button
+            color={winnerFilter === "Trump" ? "primary" : "default"}
+            onClick={() => updateWinnerFilter("Trump")}
+          >
+            States Trump won
+          </Button>
+        </div>
 
-        <Button
-          color={sortedBy === evHigh ? "primary" : ""}
-          onClick={() => sortButton(evHigh)}
-        >
-          Electoral Votes, high to low
-        </Button>
+        <div>
+          <Typography variant={"subtitle1"} display={"inline"}>
+            Filter by population:
+          </Typography>
+          <Button
+            color={
+              populationFilter[0] === 0 && populationFilter[1] === RANGE_MAX
+                ? "primary"
+                : "default"
+            }
+            onClick={() => updatePopulationFilter([0, RANGE_MAX])}
+          >
+            All sizes
+          </Button>
+          <Button
+            color={populationFilter[1] === SMALL_MEDIUM ? "primary" : "default"}
+            onClick={() => updatePopulationFilter([0, SMALL_MEDIUM])}
+          >
+            Small states
+          </Button>
+          <Button
+            color={populationFilter[0] === SMALL_MEDIUM ? "primary" : "default"}
+            onClick={() => updatePopulationFilter([SMALL_MEDIUM, MEDIUM_LARGE])}
+          >
+            Medium states
+          </Button>
+          <Button
+            color={populationFilter[0] === MEDIUM_LARGE ? "primary" : "default"}
+            onClick={() => updatePopulationFilter([MEDIUM_LARGE, RANGE_MAX])}
+          >
+            Big states
+          </Button>
+        </div>
+
+        <div>
+          <Typography variant={"subtitle1"} display={"inline"}>
+            Sort:
+          </Typography>
+          <Button
+            color={sortedBy === alphabet ? "primary" : "default"}
+            onClick={() => sortButton(alphabet)}
+          >
+            Alphabetically
+          </Button>
+          <Button
+            color={sortedBy === evLow ? "primary" : "default"}
+            onClick={() => sortButton(evLow)}
+          >
+            Electoral Votes, low to high
+          </Button>
+
+          <Button
+            color={sortedBy === evHigh ? "primary" : "default"}
+            onClick={() => sortButton(evHigh)}
+          >
+            Electoral Votes, high to low
+          </Button>
+        </div>
+        <div>
+          <Button
+            variant="contained"
+            onClick={() =>
+              cards.every((x) => selected.includes(x))
+                ? setSelected(selected.filter((x) => !cards.includes(x)))
+                : setSelected(
+                    selected.concat(cards.filter((x) => !selected.includes(x)))
+                  )
+            }
+          >
+            {cards.every((x) => selected.includes(x))
+              ? "Deselect all"
+              : "Select all"}
+          </Button>
+        </div>
       </div>
 
       <Grid container spacing={2} justify="center">
-        {cards.map((item, key) => (
-          <Grid key={key} item xs={12} sm={6} md={4} lg={3}>
-            <Card key={key}>
-              <CardContent>
-                <Typography variant="h5">{item.state}</Typography>
-                <Typography variant="subtitle2">
-                  Population:{" "}
-                  <Typography variant="body1" display="inline">
-                    {item.population
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
-                  </Typography>
-                </Typography>
-
-                <Typography variant="subtitle2">
-                  Electoral votes:{" "}
-                  <Typography variant="body1" display="inline">
-                    {item.electoral}
-                  </Typography>
-                </Typography>
-
-                <Typography variant="subtitle2">
-                  Result:{" "}
-                  <Typography variant="body1" display="inline">
-                    {item.result}
-                  </Typography>
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+        {cards.map((item) => (
+          <StateCard
+            item={item}
+            selected={selected}
+            setSelected={setSelected}
+            key={item.state}
+          />
         ))}
       </Grid>
     </div>

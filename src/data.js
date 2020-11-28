@@ -19,7 +19,7 @@ const data = [
   },
   {
     state: "Arkansas",
-    population: "3,017,804",
+    population: 3017804,
     electoral: 6,
     result: "Trump",
   },
@@ -225,7 +225,7 @@ const data = [
     state: "Oregon",
     population: 4217737,
     electoral: 7,
-    result: "Trump",
+    result: "Biden",
   },
   {
     state: "Pennsylvania",
