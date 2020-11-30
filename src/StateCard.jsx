@@ -1,7 +1,11 @@
 import { Grid, Card, Typography, CardContent, Button } from "@material-ui/core";
 
-function winnerToColor(whiteMan) {
-  if (whiteMan === "Biden") {
+/**
+ * returns the correct background color if the card is selected
+ * @param {string} winner the winner of the card
+ */
+function winnerToColor(winner) {
+  if (winner === "Biden") {
     return "#0c71e0";
   } else {
     return "#d5212e";
@@ -9,6 +13,9 @@ function winnerToColor(whiteMan) {
 }
 
 function StateCard({ item, selected, setSelected }) {
+  /**
+   * selects or deselects state based on current state
+   */
   function toggleSelected() {
     if (!selected.includes(item)) {
       setSelected([...selected, item]);
@@ -43,7 +50,10 @@ function StateCard({ item, selected, setSelected }) {
           <Typography variant="subtitle2">
             Population:{" "}
             <Typography variant="body1" display="inline">
-              {item.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+              {
+                /*inserts commas into number */
+                item.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
             </Typography>
           </Typography>
 

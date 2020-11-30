@@ -1,8 +1,12 @@
 import data from "./data";
 import { useState } from "react";
 import { Grid, Typography, Button } from "@material-ui/core";
-import StateCard from "./Card";
+import StateCard from "./StateCard";
 
+/* constants to be used in filtering and sorting. constants are used for consistency */
+const TRUMP = TRUMP;
+const BIDEN = BIDEN;
+const BOTH = ""; /* represents both, as filtering uses .includes() */
 const RANGE_MAX = 40000000000;
 const SMALL_MEDIUM = 2500000;
 const MEDIUM_LARGE = 6500000;
@@ -10,18 +14,42 @@ const ALPHABET = "Alphabetical";
 const EVLOW = "Electoral Votes, Low to High";
 const EVHIGH = "Electoral Votes, High to Low";
 
+/**
+ * returns whether a number is in a given range
+ * @param {int} num a number
+ * @param {array} tuple an array of two elements, where the first element is the
+ * lower bound and the second is the upper bound
+ */
 function withinRange(num, tuple) {
   const result = num >= tuple[0] && num < tuple[1];
   return result;
 }
 
+/**
+ * returns "primary" if the color should be selected, "default" if otherwise
+ * @param {boolean} cond whether the given filter/sort method is selected or not
+ */
+function selectedColor(cond) {
+  return cond ? "primary" : "default";
+}
+
 function App() {
+  /* the current list of cards to display */
   const [cards, setCards] = useState(data);
-  const [winnerFilter, setWinnerFilter] = useState("");
+  /* the current winner filter. either TRUMP, BIDEN, or BOTH */
+  const [winnerFilter, setWinnerFilter] = useState(BOTH);
+  /* the current population filter, an array of 2 elements representing lower and
+  upper bounds */
   const [populationFilter, setPopulationFilter] = useState([0, RANGE_MAX]);
+  /* how the list is currently being sorted, represented by a string */
   const [sortedBy, setSortedBy] = useState(ALPHABET);
+  /* the list items in the aggregator */
   const [selected, setSelected] = useState([]);
 
+  /**
+   * updates the cards to apply a given a filter for winner
+   * @param {string} winner the winner to filter by, either TRUMP, BIDEN, or BOTH
+   */
   function updateWinnerFilter(winner) {
     setCards(
       sortState(data, sortedBy).filter(
@@ -33,6 +61,10 @@ function App() {
     setWinnerFilter(winner);
   }
 
+  /**
+   * updates the cards to apply a given population filter
+   * @param {*} range a two-element array representing a range
+   */
   function updatePopulationFilter(range) {
     setCards(
       sortState(data, sortedBy).filter(
@@ -43,6 +75,12 @@ function App() {
     setPopulationFilter(range);
   }
 
+  /**
+   * returns a list sorted by a given method of sorting
+   * @param {array} list the list to sort
+   * @param {string} type the method of sorting, either ALPHABET, EVLOW, or
+   * EVHIGH
+   */
   function sortState(list, type) {
     if (type === ALPHABET) {
       const alphabet = list.sort((a, b) => {
@@ -58,7 +96,11 @@ function App() {
     }
   }
 
-  function sortButton(type) {
+  /**
+   * updates the cards to apply a method of sorting
+   * @param {string} type method of sorting
+   */
+  function updateSort(type) {
     setCards(sortState(cards, type));
     setSortedBy(type);
   }
@@ -69,14 +111,20 @@ function App() {
         <Typography variant="h5">
           {" "}
           Electoral Votes:{" "}
-          {selected.reduce((acc, cur) => acc + cur.electoral, 0)}
+          {
+            /* adds up electoral vote counts for aggregated states */
+            selected.reduce((acc, cur) => acc + cur.electoral, 0)
+          }
         </Typography>
         <Typography variant="body1">
-          {selected.length === 0
-            ? "Click on states to add up electoral votes!"
-            : selected
-                .map((item) => item.state + " (" + item.electoral + ")")
-                .join(",  ")}
+          {
+            /* returns a string of comma-separated states */
+            selected.length === 0
+              ? "Click on states to add up electoral votes!"
+              : selected
+                  .map((item) => item.state + " (" + item.electoral + ")")
+                  .join(",  ")
+          }
         </Typography>
       </div>
       <div style={{ flex: 4 }}>
@@ -86,20 +134,20 @@ function App() {
               Filter by winner:
             </Typography>
             <Button
-              color={winnerFilter === "" ? "primary" : "default"}
-              onClick={() => updateWinnerFilter("")}
+              color={selectedColor(winnerFilter === BOTH)}
+              onClick={() => updateWinnerFilter(BOTH)}
             >
               Both candidates
             </Button>
             <Button
-              color={winnerFilter === "Biden" ? "primary" : "default"}
-              onClick={() => updateWinnerFilter("Biden")}
+              color={selectedColor(winnerFilter === BIDEN)}
+              onClick={() => updateWinnerFilter(BIDEN)}
             >
               States Biden won
             </Button>
             <Button
-              color={winnerFilter === "Trump" ? "primary" : "default"}
-              onClick={() => updateWinnerFilter("Trump")}
+              color={selectedColor(winnerFilter === TRUMP)}
+              onClick={() => updateWinnerFilter(TRUMP)}
             >
               States Trump won
             </Button>
@@ -110,27 +158,21 @@ function App() {
               Filter by population:
             </Typography>
             <Button
-              color={
+              color={selectedColor(
                 populationFilter[0] === 0 && populationFilter[1] === RANGE_MAX
-                  ? "primary"
-                  : "default"
-              }
+              )}
               onClick={() => updatePopulationFilter([0, RANGE_MAX])}
             >
               All sizes
             </Button>
             <Button
-              color={
-                populationFilter[1] === SMALL_MEDIUM ? "primary" : "default"
-              }
+              color={selectedColor(populationFilter[1] === SMALL_MEDIUM)}
               onClick={() => updatePopulationFilter([0, SMALL_MEDIUM])}
             >
               Small states
             </Button>
             <Button
-              color={
-                populationFilter[0] === SMALL_MEDIUM ? "primary" : "default"
-              }
+              color={selectedColor(populationFilter[0] === SMALL_MEDIUM)}
               onClick={() =>
                 updatePopulationFilter([SMALL_MEDIUM, MEDIUM_LARGE])
               }
@@ -138,12 +180,10 @@ function App() {
               Medium states
             </Button>
             <Button
-              color={
-                populationFilter[0] === MEDIUM_LARGE ? "primary" : "default"
-              }
+              color={selectedColor(populationFilter[0] === MEDIUM_LARGE)}
               onClick={() => updatePopulationFilter([MEDIUM_LARGE, RANGE_MAX])}
             >
-              Big states
+              Large states
             </Button>
           </div>
 
@@ -152,21 +192,21 @@ function App() {
               Sort:
             </Typography>
             <Button
-              color={sortedBy === ALPHABET ? "primary" : "default"}
-              onClick={() => sortButton(ALPHABET)}
+              color={selectedColor(sortedBy === ALPHABET)}
+              onClick={() => updateSort(ALPHABET)}
             >
               Alphabetically
             </Button>
             <Button
-              color={sortedBy === EVLOW ? "primary" : "default"}
-              onClick={() => sortButton(EVLOW)}
+              color={selectedColor(sortedBy === EVLOW)}
+              onClick={() => updateSort(EVLOW)}
             >
               Electoral Votes, low to high
             </Button>
 
             <Button
-              color={sortedBy === EVHIGH ? "primary" : "default"}
-              onClick={() => sortButton(EVHIGH)}
+              color={selectedColor(sortedBy === EVHIGH)}
+              onClick={() => updateSort(EVHIGH)}
             >
               Electoral Votes, high to low
             </Button>
@@ -176,22 +216,25 @@ function App() {
               variant="contained"
               disabled={cards.every((x) => selected.includes(x))}
               onClick={() =>
+                /* add all displayed cards that aren't already in aggregator to
+                 aggregator */
                 setSelected(
                   selected.concat(cards.filter((x) => !selected.includes(x)))
                 )
               }
             >
-              Select all
+              Include all displayed states in count
             </Button>
             <Button
               style={{ marginLeft: 10 }}
               variant="contained"
               disabled={selected.length === 0}
               onClick={() =>
+                /* filter out all currently displayed cards  */
                 setSelected(selected.filter((x) => !cards.includes(x)))
               }
             >
-              Deselect all
+              Remove all displayed states from count
             </Button>
           </div>
         </div>

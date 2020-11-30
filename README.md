@@ -1,4 +1,28 @@
-# Getting Started with Create React App
+# Handout questions
+
+## Code organization
+
+The project uses one main component (`App.jsx`) that contains information regarding the state as well as layout of the page.The state of the page is dependent on the following attributes:
+
+- the cards currently displayed given the filters and sorting methods (a list of objects)
+- the current filter for the winner attribute (a string)
+- the current filter for the population attribute (a range, represented as an array)
+- the current method of sorting (a string)
+- the currently selected/aggregated states (a list of objects)
+
+When filters are applied, the original data is sorted given the current method of sorting, and the current and new filters are applied.
+
+In addition to the one main component, `StateCard.jsx`. This is a stateless component that represents the state of each card. Though it is stateless, it gets information about its status (such as whether it is selected or not) given the state in the main component. This maintains one source of truth, in the main component.
+
+The React app was created using functional components and hooks (such as `useState()`). Styling was done with the `Material-UI` package.
+
+## How data is passed between components
+
+The State Cards in the grid are rendered by mapping on the current cards (a state). This list of current cards is a list of objects containing the attributes State (which refers)
+
+## How the user triggers state changes
+
+# Create React App (Boilerplate)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
