@@ -1,13 +1,7 @@
-import {
-  Grid,
-  Card,
-  Typography,
-  CardContent,
-  CardActionArea,
-} from "@material-ui/core";
+import { Grid, Card, Typography, CardContent, Button } from "@material-ui/core";
 
 function winnerToColor(whiteMan) {
-  if (whiteMan == "Biden") {
+  if (whiteMan === "Biden") {
     return "#0c71e0";
   } else {
     return "#d5212e";
@@ -27,6 +21,7 @@ function StateCard({ item, selected, setSelected }) {
     <Grid key={item.state} item xs={12} sm={6} md={4} lg={3}>
       <Card
         style={{
+          height: "100%",
           backgroundColor: selected.includes(item)
             ? winnerToColor(item.result)
             : "white",
@@ -34,33 +29,41 @@ function StateCard({ item, selected, setSelected }) {
         }}
         key={item.state}
       >
-        <CardActionArea onClick={() => toggleSelected()}>
-          <CardContent>
-            <Typography variant="h5">{item.state}</Typography>
-            <Typography variant="subtitle2">
-              Population:{" "}
-              <Typography variant="body1" display="inline">
-                {item.population
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
-              </Typography>
+        <CardContent>
+          <Typography variant="h5">{item.state}</Typography>
+          <img
+            style={{
+              width: "70%",
+              height: "auto",
+              objectFit: "contain",
+            }}
+            alt={"Flag of " + item.state}
+            src={"./Flags/" + item.state + ".png"}
+          />
+          <Typography variant="subtitle2">
+            Population:{" "}
+            <Typography variant="body1" display="inline">
+              {item.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
             </Typography>
+          </Typography>
 
-            <Typography variant="subtitle2">
-              Electoral votes:{" "}
-              <Typography variant="body1" display="inline">
-                {item.electoral}
-              </Typography>
+          <Typography variant="subtitle2">
+            Electoral votes:{" "}
+            <Typography variant="body1" display="inline">
+              {item.electoral}
             </Typography>
+          </Typography>
 
-            <Typography variant="subtitle2">
-              Result:{" "}
-              <Typography variant="body1" display="inline">
-                {item.result}
-              </Typography>
+          <Typography variant="subtitle2">
+            Result:{" "}
+            <Typography variant="body1" display="inline">
+              {item.result}
             </Typography>
-          </CardContent>
-        </CardActionArea>
+          </Typography>
+          <Button variant="contained" onClick={() => toggleSelected()}>
+            {selected.includes(item) ? "Remove from Count" : "Include In Count"}
+          </Button>
+        </CardContent>
       </Card>
     </Grid>
   );
