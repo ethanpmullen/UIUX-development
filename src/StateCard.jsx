@@ -25,7 +25,7 @@ function StateCard({ item, selected, setSelected }) {
   }
 
   return (
-    <Grid key={item.state} item xs={12} sm={6} md={4} lg={3}>
+    <Grid key={item.name} item xs={12} sm={6} md={4} lg={3}>
       <Card
         style={{
           height: "100%",
@@ -34,18 +34,18 @@ function StateCard({ item, selected, setSelected }) {
             : "white",
           color: selected.includes(item) ? "white" : "black",
         }}
-        key={item.state}
+        key={item.name}
       >
         <CardContent>
-          <Typography variant="h5">{item.state}</Typography>
+          <Typography variant="h5">{item.name}</Typography>
           <img
             style={{
               width: "70%",
               height: "auto",
               objectFit: "contain",
             }}
-            alt={"Flag of " + item.state}
-            src={"./Flags/" + item.state + ".png"}
+            alt={"Flag of " + item.name}
+            src={"./Flags/" + item.name + ".png"}
           />
           <Typography variant="subtitle2">
             Population:{" "}

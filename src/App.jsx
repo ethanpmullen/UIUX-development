@@ -4,8 +4,8 @@ import { Grid, Typography, Button } from "@material-ui/core";
 import StateCard from "./StateCard";
 
 /* constants to be used in filtering and sorting. constants are used for consistency */
-const TRUMP = TRUMP;
-const BIDEN = BIDEN;
+const TRUMP = "Trump";
+const BIDEN = "Biden";
 const BOTH = ""; /* represents both, as filtering uses .includes() */
 const RANGE_MAX = 40000000000;
 const SMALL_MEDIUM = 2500000;
@@ -84,8 +84,8 @@ function App() {
   function sortState(list, type) {
     if (type === ALPHABET) {
       const alphabet = list.sort((a, b) => {
-        if (a.state < b.state) return -1;
-        else if (a.state < b.state) return 1;
+        if (a.name < b.name) return -1;
+        else if (a.name < b.name) return 1;
         else return 0;
       });
       return alphabet;
@@ -122,14 +122,14 @@ function App() {
             selected.length === 0
               ? "Click on states to add up electoral votes!"
               : selected
-                  .map((item) => item.state + " (" + item.electoral + ")")
+                  .map((item) => item.name + " (" + item.electoral + ")")
                   .join(",  ")
           }
         </Typography>
       </div>
       <div style={{ flex: 4 }}>
         <div style={{ margin: "10px 4px" }}>
-          <div>
+          <div style={{ borderBottom: "1px solid black" }}>
             <Typography variant={"subtitle1"} display={"inline"}>
               Filter by winner:
             </Typography>
@@ -153,7 +153,7 @@ function App() {
             </Button>
           </div>
 
-          <div>
+          <div style={{ borderBottom: "1px solid black" }}>
             <Typography variant={"subtitle1"} display={"inline"}>
               Filter by population:
             </Typography>
@@ -187,7 +187,7 @@ function App() {
             </Button>
           </div>
 
-          <div>
+          <div style={{ borderBottom: "1px solid black" }}>
             <Typography variant={"subtitle1"} display={"inline"}>
               Sort:
             </Typography>
@@ -211,8 +211,10 @@ function App() {
               Electoral Votes, high to low
             </Button>
           </div>
+
           <div>
             <Button
+              style={{ margin: "10px 0px", marginRight: "10px" }}
               variant="contained"
               disabled={cards.every((x) => selected.includes(x))}
               onClick={() =>
@@ -223,10 +225,10 @@ function App() {
                 )
               }
             >
-              Include all displayed states in count
+              Include states in count
             </Button>
             <Button
-              style={{ marginLeft: 10 }}
+              style={{ margin: "10px 0px" }}
               variant="contained"
               disabled={selected.length === 0}
               onClick={() =>
@@ -234,7 +236,7 @@ function App() {
                 setSelected(selected.filter((x) => !cards.includes(x)))
               }
             >
-              Remove all displayed states from count
+              Remove states from count
             </Button>
           </div>
         </div>
@@ -245,7 +247,7 @@ function App() {
               item={item}
               selected={selected}
               setSelected={setSelected}
-              key={item.state}
+              key={item.name}
             />
           ))}
         </Grid>

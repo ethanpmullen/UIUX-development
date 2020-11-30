@@ -18,9 +18,25 @@ The React app was created using functional components and hooks (such as `useSta
 
 ## How data is passed between components
 
-The State Cards in the grid are rendered by mapping on the current cards (a state). This list of current cards is a list of objects containing the attributes State (which refers)
+The State Cards in the grid are rendered by mapping on the current cards (a state). The items passed down are `item`, `selected`, and `setSelected`.
+
+This list of current cards is a list of objects containing the attributes name, electoral, population, and result. This object is the `item` that StateCard uses to populate the card information.
+
+Selected is the array of currently selected cards. StateCard uses this information to determine whether the state is selected or not, which determines properties such as background color, button text, and button action.
 
 ## How the user triggers state changes
+
+The user triggers state changes through the buttons on the website. This includes the filter buttons, sort buttons, and include/remove buttons on each card.
+
+If the user does not want to include/remove states from count on at a time, they can use the "Include states in count" and "Remove states from count" buttons to include/remove all of the displayed cards in the count. For example if a user wants to see all of the Biden votes, they can filter by states won by Biden, and then click Select All.
+
+## Acknowledgements
+
+Population data is given by the [Census population projection](https://www.census.gov/data/datasets/time-series/demo/popest/2010s-state-total.html#par_textimage_1873399417) for 2019.
+
+State electoral counts and projected winners are given via the Associated Press.
+
+The regex to convert a number into a comma-separated string was found via [Stack Overflow](https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript).
 
 # Create React App (Boilerplate)
 
