@@ -1,4 +1,5 @@
 import { Grid, Card, Typography, CardContent, Button } from "@material-ui/core";
+import { popToRange } from "./App";
 
 /**
  * returns the correct background color if the card is selected
@@ -52,7 +53,12 @@ function StateCard({ item, selected, setSelected }) {
             <Typography variant="body1" display="inline">
               {
                 /*inserts commas into number */
-                item.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                item.population
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+                  " (" +
+                  popToRange(item.population) +
+                  ")"
               }
             </Typography>
           </Typography>

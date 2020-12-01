@@ -33,6 +33,16 @@ function selectedColor(cond) {
   return cond ? "primary" : "default";
 }
 
+export function popToRange(population) {
+  if (population < SMALL_MEDIUM) {
+    return "Small state";
+  } else if (population < MEDIUM_LARGE) {
+    return "Medium state";
+  } else {
+    return "Large state";
+  }
+}
+
 function App() {
   /* the current list of cards to display */
   const [cards, setCards] = useState(data);
