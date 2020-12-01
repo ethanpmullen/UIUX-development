@@ -54,7 +54,8 @@ function App() {
   /* how the list is currently being sorted, represented by a string */
   const [sortedBy, setSortedBy] = useState(ALPHABET);
   /* the list items in the aggregator */
-  const [selected, setSelected] = useState([]);
+  const [blueStates, setBlueStates] = useState([]);
+  const [redStates, setRedStates] = useState([]);
 
   /**
    * updates the cards to apply a given a filter for winner
@@ -117,27 +118,54 @@ function App() {
 
   return (
     <div style={{ padding: "5px 20px", display: "flex" }}>
-      <div style={{ flex: 1, margin: "10px 4px" }}>
+      <div style={{ flex: 1, marginTop: 10, marginRight: 10 }}>
+        {redStates.reduce((acc, cur) => acc + cur.electoral, 0) >= 270 && (
+          <Typography variant="h5">
+            <b>Trump wins!</b>
+          </Typography>
+        )}
+        {blueStates.reduce((acc, cur) => acc + cur.electoral, 0) >= 270 && (
+          <Typography variant="h5">
+            <b>Biden wins!</b>
+          </Typography>
+        )}
         <Typography variant="h5">
-          {" "}
-          Electoral Votes:{" "}
           {
             /* adds up electoral vote counts for aggregated states */
-            selected.reduce((acc, cur) => acc + cur.electoral, 0)
-          }
+            blueStates.reduce((acc, cur) => acc + cur.electoral, 0)
+          }{" "}
+          electoral votes for Biden
         </Typography>
         <Typography variant="body1">
           {
             /* returns a string of comma-separated states */
-            selected.length === 0
+            blueStates.length === 0
               ? "Click on states to add up electoral votes!"
-              : selected
+              : blueStates
+                  .map((item) => item.name + " (" + item.electoral + ")")
+                  .join(",  ")
+          }
+        </Typography>
+
+        <Typography variant="h5">
+          {
+            /* adds up electoral vote counts for aggregated states */
+            redStates.reduce((acc, cur) => acc + cur.electoral, 0)
+          }{" "}
+          electoral votes for Trump
+        </Typography>
+        <Typography variant="body1">
+          {
+            /* returns a string of comma-separated states */
+            redStates.length === 0
+              ? "Click on states to add up electoral votes!"
+              : redStates
                   .map((item) => item.name + " (" + item.electoral + ")")
                   .join(",  ")
           }
         </Typography>
       </div>
-      <div style={{ flex: 4 }}>
+      <div style={{ flex: 3 }}>
         <div style={{ margin: "10px 4px" }}>
           <div style={{ borderBottom: "1px solid black" }}>
             <Typography variant={"subtitle1"} display={"inline"}>
@@ -226,25 +254,44 @@ function App() {
             <Button
               style={{ margin: "10px 0px", marginRight: "10px" }}
               variant="contained"
-              disabled={cards.every((x) => selected.includes(x))}
-              onClick={() =>
+              disabled={cards.every((x) => blueStates.includes(x))}
+              onClick={() => {
                 /* add all displayed cards that aren't already in aggregator to
                  aggregator */
-                setSelected(
-                  selected.concat(cards.filter((x) => !selected.includes(x)))
-                )
-              }
+                setBlueStates(
+                  blueStates.concat(
+                    cards.filter((x) => !blueStates.includes(x))
+                  )
+                );
+                setRedStates(redStates.filter((x) => !cards.includes(x)));
+              }}
             >
-              Include states in count
+              Claim all for Biden
+            </Button>
+            <Button
+              style={{ margin: "10px 0px", marginRight: "10px" }}
+              variant="contained"
+              disabled={cards.every((x) => redStates.includes(x))}
+              onClick={() => {
+                /* add all displayed cards that aren't already in aggregator to
+                 aggregator */
+                setRedStates(
+                  redStates.concat(cards.filter((x) => !redStates.includes(x)))
+                );
+                setBlueStates(blueStates.filter((x) => !cards.includes(x)));
+              }}
+            >
+              Claim all for Trump
             </Button>
             <Button
               style={{ margin: "10px 0px" }}
               variant="contained"
-              disabled={selected.length === 0}
-              onClick={() =>
+              disabled={blueStates.length === 0 && redStates.length === 0}
+              onClick={() => {
                 /* filter out all currently displayed cards  */
-                setSelected(selected.filter((x) => !cards.includes(x)))
-              }
+                setBlueStates(blueStates.filter((x) => !cards.includes(x)));
+                setRedStates(redStates.filter((x) => !cards.includes(x)));
+              }}
             >
               Remove states from count
             </Button>
@@ -255,8 +302,10 @@ function App() {
           {cards.map((item) => (
             <StateCard
               item={item}
-              selected={selected}
-              setSelected={setSelected}
+              blueStates={blueStates}
+              setBlueStates={setBlueStates}
+              redStates={redStates}
+              setRedStates={setRedStates}
               key={item.name}
             />
           ))}

@@ -1,4 +1,11 @@
-import { Grid, Card, Typography, CardContent, Button } from "@material-ui/core";
+import {
+  Grid,
+  Card,
+  Typography,
+  CardContent,
+  Button,
+  Box,
+} from "@material-ui/core";
 import { popToRange } from "./App";
 
 /**
@@ -13,15 +20,38 @@ function winnerToColor(winner) {
   }
 }
 
-function StateCard({ item, selected, setSelected }) {
+function StateCard({
+  item,
+  blueStates,
+  setBlueStates,
+  redStates,
+  setRedStates,
+}) {
   /**
-   * selects or deselects state based on current state
+   * selects or deselects a blue state based on current state
    */
-  function toggleSelected() {
-    if (!selected.includes(item)) {
-      setSelected([...selected, item]);
+  function toggleBlue() {
+    if (redStates.includes(item)) {
+      setRedStates(redStates.filter((x) => x !== item));
+    }
+    if (!blueStates.includes(item)) {
+      setBlueStates([...blueStates, item]);
     } else {
-      setSelected(selected.filter((x) => x !== item));
+      setBlueStates(blueStates.filter((x) => x !== item));
+    }
+  }
+
+  /**
+   * selects or deselects a red state based on current state
+   */
+  function toggleRed() {
+    if (blueStates.includes(item)) {
+      setBlueStates(blueStates.filter((x) => x !== item));
+    }
+    if (!redStates.includes(item)) {
+      setRedStates([...redStates, item]);
+    } else {
+      setRedStates(redStates.filter((x) => x !== item));
     }
   }
 
@@ -30,10 +60,15 @@ function StateCard({ item, selected, setSelected }) {
       <Card
         style={{
           height: "100%",
-          backgroundColor: selected.includes(item)
-            ? winnerToColor(item.result)
+          backgroundColor: blueStates.includes(item)
+            ? "#0c71e0"
+            : redStates.includes(item)
+            ? "#d5212e"
             : "white",
-          color: selected.includes(item) ? "white" : "black",
+          color:
+            blueStates.includes(item) || redStates.includes(item)
+              ? "white"
+              : "black",
         }}
         key={item.name}
       >
@@ -76,8 +111,24 @@ function StateCard({ item, selected, setSelected }) {
               {item.result}
             </Typography>
           </Typography>
-          <Button variant="contained" onClick={() => toggleSelected()}>
-            {selected.includes(item) ? "Remove from Count" : "Include In Count"}
+
+          <Button
+            style={{ margin: 5 }}
+            variant="contained"
+            onClick={() => toggleBlue()}
+          >
+            {blueStates.includes(item)
+              ? "Unclaim for Biden"
+              : "Claim for Biden"}
+          </Button>
+          <Button
+            style={{
+              margin: 5,
+            }}
+            variant="contained"
+            onClick={() => toggleRed()}
+          >
+            {redStates.includes(item) ? "Unclaim for Trump" : "Claim for Trump"}
           </Button>
         </CardContent>
       </Card>
