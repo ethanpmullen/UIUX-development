@@ -1,24 +1,5 @@
-import {
-  Grid,
-  Card,
-  Typography,
-  CardContent,
-  Button,
-  Box,
-} from "@material-ui/core";
+import { Grid, Card, Typography, CardContent, Button } from "@material-ui/core";
 import { evToRange } from "./App";
-
-/**
- * returns the correct background color if the card is selected
- * @param {string} winner the winner of the card
- */
-function winnerToColor(winner) {
-  if (winner === "Biden") {
-    return "#0c71e0";
-  } else {
-    return "#d5212e";
-  }
-}
 
 function StateCard({
   item,

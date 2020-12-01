@@ -8,27 +8,28 @@ The project uses one main component (`App.jsx`) that contains information regard
 - the current filter for the winner attribute (a string)
 - the current filter for the population attribute (a range, represented as an array)
 - the current method of sorting (a string)
-- the currently selected/aggregated states (a list of objects)
+- the currently selected/aggregated states for Trump (a list of objects)
+- the currently selected/aggregated states for Biden (a list of objects)
 
 When filters are applied, the original data is sorted given the current method of sorting, and the current and new filters are applied.
 
 In addition to the one main component, `StateCard.jsx`. This is a stateless component that represents the state of each card. Though it is stateless, it gets information about its status (such as whether it is selected or not) given the state in the main component. This maintains one source of truth, in the main component.
 
-The React app was created using functional components and hooks (such as `useState()`). Styling was done with the `Material-UI` package.
+The React app was created using functional components and hooks (i.e. `useState()`). Styling was done with the `Material-UI` package.
 
 ## How data is passed between components
 
-The State Cards in the grid are rendered by mapping on the current cards (a state). The items passed down are `item`, `selected`, and `setSelected`.
+The State Cards in the grid are rendered by mapping on the current cards (a state). The items passed down are `item`, `redStates`, and `setRedStates`, `blueStates`, and `setBlueStates` .
 
 This list of current cards is a list of objects containing the attributes name, electoral, population, and result. This object is the `item` that StateCard uses to populate the card information.
 
-Selected is the array of currently selected cards. StateCard uses this information to determine whether the state is selected or not, which determines properties such as background color, button text, and button action.
+The redStates and blueStates arrays indicate states currently claimed for Trump or Biden. StateCard uses this information to determine whether the state is selected or not, which determines properties such as background color, button text, and button action.
 
 ## How the user triggers state changes
 
 The user triggers state changes through the buttons on the website. This includes the filter buttons, sort buttons, and include/remove buttons on each card.
 
-If the user does not want to include/remove states from count on at a time, they can use the "Include states in count" and "Remove states from count" buttons to include/remove all of the displayed cards in the count. For example if a user wants to see all of the Biden votes, they can filter by states won by Biden, and then click Select All.
+If the user does not want to include/remove states from count on at a time, they can use the "Claim all for Biden", "Claim all for Trump", and "Unclaim all" buttons to include/remove all of the displayed cards in the count. For example if a user wants to see all of the Biden votes, they can filter by states won by Biden, and then click "Claim all for Biden.
 
 ## Acknowledgements
 

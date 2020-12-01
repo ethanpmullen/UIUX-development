@@ -7,9 +7,13 @@ import StateCard from "./StateCard";
 const TRUMP = "Trump";
 const BIDEN = "Biden";
 const BOTH = ""; /* represents both, as filtering uses .includes() */
+
+/* ranges are inclusive downwards */
 const RANGE_MAX = 60;
-const SMALL_MEDIUM = 5;
-const MEDIUM_LARGE = 10;
+const SMALL_UPPER_BOUND = 5;
+const MEDIUM_UPPER_BOUND = 10;
+
+/* descriptive strings used in sortState() */
 const ALPHABET = "Alphabetical";
 const POPLOW = "Population, Low to High";
 const POPHIGH = "Population, High to Low";
@@ -33,10 +37,14 @@ function selectedColor(cond) {
   return cond ? "primary" : "default";
 }
 
+/**
+ * Converts a number of electoral votes to its range represented as a string
+ * @param {number} electorals number of electoral votes of a state
+ */
 export function evToRange(electorals) {
-  if (electorals <= SMALL_MEDIUM) {
+  if (electorals <= SMALL_UPPER_BOUND) {
     return "Small state";
-  } else if (electorals <= MEDIUM_LARGE) {
+  } else if (electorals <= MEDIUM_UPPER_BOUND) {
     return "Medium state";
   } else {
     return "Large state";
@@ -53,8 +61,9 @@ function App() {
   const [electoralFilter, setElectoralFilter] = useState([0, RANGE_MAX]);
   /* how the list is currently being sorted, represented by a string */
   const [sortedBy, setSortedBy] = useState(ALPHABET);
-  /* the list items in the aggregator */
+  /* states claimed for Biden in the aggregator */
   const [blueStates, setBlueStates] = useState([]);
+  /* states claimed for Trump in the aggregator */
   const [redStates, setRedStates] = useState([]);
 
   /**
@@ -88,8 +97,8 @@ function App() {
   /**
    * returns a list sorted by a given method of sorting
    * @param {array} list the list to sort
-   * @param {string} type the method of sorting, either ALPHABET, EVLOW, or
-   * EVHIGH
+   * @param {string} type the method of sorting, either ALPHABET, POPLOW, or
+   * POPHIGH
    */
   function sortState(list, type) {
     if (type === ALPHABET) {
@@ -118,11 +127,14 @@ function App() {
   return (
     <div style={{ padding: "5px 20px", display: "flex" }}>
       <div style={{ flex: 1, marginTop: 10, marginRight: 10 }}>
-        {redStates.reduce((acc, cur) => acc + cur.electoral, 0) >= 270 && (
-          <Typography variant="h5">
-            <b>Trump wins!</b>
-          </Typography>
-        )}
+        {
+          /* displays message if electoral count is above threshold*/
+          redStates.reduce((acc, cur) => acc + cur.electoral, 0) >= 270 && (
+            <Typography variant="h5">
+              <b>Trump wins!</b>
+            </Typography>
+          )
+        }
         {blueStates.reduce((acc, cur) => acc + cur.electoral, 0) >= 270 && (
           <Typography variant="h5">
             <b>Biden wins!</b>
@@ -203,22 +215,24 @@ function App() {
               All sizes
             </Button>
             <Button
-              color={selectedColor(electoralFilter[1] === SMALL_MEDIUM)}
-              onClick={() => updatePopulationFilter([0, SMALL_MEDIUM])}
+              color={selectedColor(electoralFilter[1] === SMALL_UPPER_BOUND)}
+              onClick={() => updatePopulationFilter([0, SMALL_UPPER_BOUND])}
             >
               Small states
             </Button>
             <Button
-              color={selectedColor(electoralFilter[0] === SMALL_MEDIUM)}
+              color={selectedColor(electoralFilter[0] === SMALL_UPPER_BOUND)}
               onClick={() =>
-                updatePopulationFilter([SMALL_MEDIUM, MEDIUM_LARGE])
+                updatePopulationFilter([SMALL_UPPER_BOUND, MEDIUM_UPPER_BOUND])
               }
             >
               Medium states
             </Button>
             <Button
-              color={selectedColor(electoralFilter[0] === MEDIUM_LARGE)}
-              onClick={() => updatePopulationFilter([MEDIUM_LARGE, RANGE_MAX])}
+              color={selectedColor(electoralFilter[0] === MEDIUM_UPPER_BOUND)}
+              onClick={() =>
+                updatePopulationFilter([MEDIUM_UPPER_BOUND, RANGE_MAX])
+              }
             >
               Large states
             </Button>
@@ -272,8 +286,7 @@ function App() {
               variant="contained"
               disabled={cards.every((x) => redStates.includes(x))}
               onClick={() => {
-                /* add all displayed cards that aren't already in aggregator to
-                 aggregator */
+                /* claims all displayed states for Trump */
                 setRedStates(
                   redStates.concat(cards.filter((x) => !redStates.includes(x)))
                 );
@@ -287,7 +300,7 @@ function App() {
               variant="contained"
               disabled={blueStates.length === 0 && redStates.length === 0}
               onClick={() => {
-                /* filter out all currently displayed cards  */
+                /* claims all displayed states for Biden  */
                 setBlueStates(blueStates.filter((x) => !cards.includes(x)));
                 setRedStates(redStates.filter((x) => !cards.includes(x)));
               }}
