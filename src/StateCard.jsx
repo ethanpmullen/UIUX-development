@@ -6,7 +6,7 @@ import {
   Button,
   Box,
 } from "@material-ui/core";
-import { popToRange } from "./App";
+import { evToRange } from "./App";
 
 /**
  * returns the correct background color if the card is selected
@@ -88,12 +88,7 @@ function StateCard({
             <Typography variant="body1" display="inline">
               {
                 /*inserts commas into number */
-                item.population
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-                  " (" +
-                  popToRange(item.population) +
-                  ")"
+                item.population.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }
             </Typography>
           </Typography>
@@ -101,7 +96,7 @@ function StateCard({
           <Typography variant="subtitle2">
             Electoral votes:{" "}
             <Typography variant="body1" display="inline">
-              {item.electoral}
+              {item.electoral + " (" + evToRange(item.electoral) + ")"}
             </Typography>
           </Typography>
 

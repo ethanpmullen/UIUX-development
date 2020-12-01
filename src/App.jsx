@@ -7,12 +7,12 @@ import StateCard from "./StateCard";
 const TRUMP = "Trump";
 const BIDEN = "Biden";
 const BOTH = ""; /* represents both, as filtering uses .includes() */
-const RANGE_MAX = 40000000000;
-const SMALL_MEDIUM = 2500000;
-const MEDIUM_LARGE = 6500000;
+const RANGE_MAX = 60;
+const SMALL_MEDIUM = 5;
+const MEDIUM_LARGE = 10;
 const ALPHABET = "Alphabetical";
-const EVLOW = "Electoral Votes, Low to High";
-const EVHIGH = "Electoral Votes, High to Low";
+const POPLOW = "Population, Low to High";
+const POPHIGH = "Population, High to Low";
 
 /**
  * returns whether a number is in a given range
@@ -21,7 +21,7 @@ const EVHIGH = "Electoral Votes, High to Low";
  * lower bound and the second is the upper bound
  */
 function withinRange(num, tuple) {
-  const result = num >= tuple[0] && num < tuple[1];
+  const result = num > tuple[0] && num <= tuple[1];
   return result;
 }
 
@@ -33,10 +33,10 @@ function selectedColor(cond) {
   return cond ? "primary" : "default";
 }
 
-export function popToRange(population) {
-  if (population < SMALL_MEDIUM) {
+export function evToRange(electorals) {
+  if (electorals <= SMALL_MEDIUM) {
     return "Small state";
-  } else if (population < MEDIUM_LARGE) {
+  } else if (electorals <= MEDIUM_LARGE) {
     return "Medium state";
   } else {
     return "Large state";
@@ -50,7 +50,7 @@ function App() {
   const [winnerFilter, setWinnerFilter] = useState(BOTH);
   /* the current population filter, an array of 2 elements representing lower and
   upper bounds */
-  const [populationFilter, setPopulationFilter] = useState([0, RANGE_MAX]);
+  const [electoralFilter, setElectoralFilter] = useState([0, RANGE_MAX]);
   /* how the list is currently being sorted, represented by a string */
   const [sortedBy, setSortedBy] = useState(ALPHABET);
   /* the list items in the aggregator */
@@ -65,8 +65,7 @@ function App() {
     setCards(
       sortState(data, sortedBy).filter(
         (s) =>
-          s.result.includes(winner) &&
-          withinRange(s.population, populationFilter)
+          s.result.includes(winner) && withinRange(s.electoral, electoralFilter)
       )
     );
     setWinnerFilter(winner);
@@ -80,10 +79,10 @@ function App() {
     setCards(
       sortState(data, sortedBy).filter(
         (s) =>
-          s.result.includes(winnerFilter) && withinRange(s.population, range)
+          s.result.includes(winnerFilter) && withinRange(s.electoral, range)
       )
     );
-    setPopulationFilter(range);
+    setElectoralFilter(range);
   }
 
   /**
@@ -100,10 +99,10 @@ function App() {
         else return 0;
       });
       return alphabet;
-    } else if (type === EVLOW) {
-      return list.sort((a, b) => a.electoral - b.electoral);
-    } else if (type === EVHIGH) {
-      return list.sort((a, b) => b.electoral - a.electoral);
+    } else if (type === POPLOW) {
+      return list.sort((a, b) => a.population - b.population);
+    } else if (type === POPHIGH) {
+      return list.sort((a, b) => b.population - a.population);
     }
   }
 
@@ -193,24 +192,24 @@ function App() {
 
           <div style={{ borderBottom: "1px solid black" }}>
             <Typography variant={"subtitle1"} display={"inline"}>
-              Filter by population:
+              Filter by electoral votes:
             </Typography>
             <Button
               color={selectedColor(
-                populationFilter[0] === 0 && populationFilter[1] === RANGE_MAX
+                electoralFilter[0] === 0 && electoralFilter[1] === RANGE_MAX
               )}
               onClick={() => updatePopulationFilter([0, RANGE_MAX])}
             >
               All sizes
             </Button>
             <Button
-              color={selectedColor(populationFilter[1] === SMALL_MEDIUM)}
+              color={selectedColor(electoralFilter[1] === SMALL_MEDIUM)}
               onClick={() => updatePopulationFilter([0, SMALL_MEDIUM])}
             >
               Small states
             </Button>
             <Button
-              color={selectedColor(populationFilter[0] === SMALL_MEDIUM)}
+              color={selectedColor(electoralFilter[0] === SMALL_MEDIUM)}
               onClick={() =>
                 updatePopulationFilter([SMALL_MEDIUM, MEDIUM_LARGE])
               }
@@ -218,7 +217,7 @@ function App() {
               Medium states
             </Button>
             <Button
-              color={selectedColor(populationFilter[0] === MEDIUM_LARGE)}
+              color={selectedColor(electoralFilter[0] === MEDIUM_LARGE)}
               onClick={() => updatePopulationFilter([MEDIUM_LARGE, RANGE_MAX])}
             >
               Large states
@@ -236,17 +235,17 @@ function App() {
               Alphabetically
             </Button>
             <Button
-              color={selectedColor(sortedBy === EVLOW)}
-              onClick={() => updateSort(EVLOW)}
+              color={selectedColor(sortedBy === POPLOW)}
+              onClick={() => updateSort(POPLOW)}
             >
-              Electoral Votes, low to high
+              Population, low to high
             </Button>
 
             <Button
-              color={selectedColor(sortedBy === EVHIGH)}
-              onClick={() => updateSort(EVHIGH)}
+              color={selectedColor(sortedBy === POPHIGH)}
+              onClick={() => updateSort(POPHIGH)}
             >
-              Electoral Votes, high to low
+              Population, high to low
             </Button>
           </div>
 
