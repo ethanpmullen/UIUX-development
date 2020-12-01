@@ -180,7 +180,7 @@ function App() {
         <div style={{ margin: "10px 4px" }}>
           <div style={{ borderBottom: "1px solid black" }}>
             <Typography variant={"subtitle1"} display={"inline"}>
-              Filter by winner:
+              Filter by result:
             </Typography>
             <Button
               color={selectedColor(winnerFilter === BOTH)}
