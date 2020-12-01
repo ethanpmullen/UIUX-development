@@ -37,7 +37,7 @@ Population data is given by the [Census population projection](https://www.censu
 
 State electoral counts and projected winners are given via the Associated Press.
 
-The regex to convert a number into a comma-separated string was found via [Stack Overflow](https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript).
+The regex to convert a number into a comma-separated string (`StateCard.jsx`, line 72) was found via [Stack Overflow](https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript).
 
 # Create React App (Boilerplate)
 
